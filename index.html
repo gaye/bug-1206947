@@ -5,7 +5,7 @@
   <script>
     let debug = console.log.bind(console, '[main]');
     debug('register serviceworker');
-    return navigator.serviceWorker.register('./serviceworker.js')
+    navigator.serviceWorker.register('./serviceworker.js')
     .then(() => {
       return navigator.serviceWorker.ready;
     })
