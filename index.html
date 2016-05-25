@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <title>Bug 1206947</title>
+  <meta charset="utf-8">
+  <script>
+    let debug = console.log.bind(console, '[main]');
+    debug('register serviceworker');
+    navigator.serviceWorker.register('/serviceworker.js').then(() => {
+      debug('spawn webworker');
+      let worker = new Worker(
+        URL.createObjectURL(
+          new Blob([`
+            let debug = console.log.bind(console, '[webworker]');
+            self.onmessage = (event) => {
+              let url = event.data;
+              debug('fetch', url);
+              return fetch(url).then(res => {
+                return res.text();
+              }).then(body => {
+                debug('response', body);
+                self.postMessage(body);
+              });
+            };
+          `])
+        )
+      );
+
+      worker.onmessage = event => {
+        document.body.textContent = event.data;
+      };
+
+      debug('call webworker');
+      worker.postMessage(
+        document.location.protocol +
+        '//' +
+        document.location.host +
+        '/foo.txt'
+      );
+    });
+  </script>
+<head>
+</head>
+</html>
