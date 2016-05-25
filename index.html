@@ -5,7 +5,7 @@
   <script>
     let debug = console.log.bind(console, '[main]');
     debug('register serviceworker');
-    navigator.serviceWorker.register('/serviceworker.js').then(() => {
+    navigator.serviceWorker.register('./serviceworker.js').then(() => {
       debug('spawn webworker');
       let worker = new Worker(
         URL.createObjectURL(
@@ -30,12 +30,7 @@
       };
 
       debug('call webworker');
-      worker.postMessage(
-        document.location.protocol +
-        '//' +
-        document.location.host +
-        '/foo.txt'
-      );
+      worker.postMessage(document.location.toString() + 'foo.txt');
     });
   </script>
 <head>
