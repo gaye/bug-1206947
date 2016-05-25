@@ -5,7 +5,8 @@
   <script>
     let debug = console.log.bind(console, '[main]');
     debug('register serviceworker');
-    navigator.serviceWorker.register('./serviceworker.js').then(() => {
+    navigator.serviceWorker.register('./serviceworker.js');
+    navigator.serviceWorker.ready.then(() => {
       debug('spawn webworker');
       let worker = new Worker(
         URL.createObjectURL(
